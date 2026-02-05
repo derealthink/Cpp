@@ -1,27 +1,21 @@
 #include <iostream>
-
-char *to_upper(char *s)
-{
-    int i = 0;
-
-    while (s[i])
-    {
-        if (s[i] >= 'a' && s[i] <= 'z')
-            s[i] = s[i] - 32;
-        i++;
-    }
-    return (s);
-}
+#include <ctype.h>
 
 int main(int argc, char **argv){
-    if (argc > 2)
-        return (1);
-    else if (argc == 1)
+    if (argc <= 1)
         std::cout << "* LOUD AND UNBEARABLE FEEDBACK NOISE *\n";
     else {
-        char *res = to_upper(argv[1]);
-        std::cout << res << '\n';
+      for (int i = 1; i < argc; i++)
+      {
+        char *res = argv[i];
+        char c;
+
+        for (int j = 0; (c = res[j]); j++)
+            std::cout << (char) toupper(c);
+        if (i < argc - 1)
+            std::cout << ' ';
+      }
+      std::cout << '\n';
     }
     return (0);
-      
 }
