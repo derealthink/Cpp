@@ -8,8 +8,8 @@ std::string PhoneBook::getLastName(int id) {
 	return (Contacts[id].getLastName());
 }
 
-std::string PhoneBook::getNickname(int id) {
-	return (Contacts[id].getNickname());
+std::string PhoneBook::getNickName(int id) {
+	return (Contacts[id].getNickName());
 }
 
 void
@@ -26,8 +26,8 @@ int PhoneBook::isContactUsed(int id) {
 }
 
 void TruncateAndReplace(std::string &str) {
-	if (str.length() > maxLength) {
-		str.resize(maxLength - 1);
+	if (str.length() > mlen) {
+		str.resize(mlen - 1);
 		str += ".";
 	}
 }
@@ -41,12 +41,12 @@ void PhoneBook::listPhoneBook() {
 		    << "|" << std::setw(10) << "Last Name"
 		    << "|" << std::setw(10) << "Nick Name"
 		    << "|\n" << separator;
-	for (int id = 0; Contacts[id].ContactExists(); id++) {
+	for (int id = 0; Contacts[id].contactExists(); id++) {
 		std::string firstname = getFirstName(id);
 		TruncateAndReplace(firstname);
 		std::string lastname = getLastName(id);
 		TruncateAndReplace(lastname);
-		std::string nickname = getNickname(id);
+		std::string nickname = getNickName(id);
 		TruncateAndReplace(nickname);
 		std::cout << "|" << std::setw(10) << id
 			    << "|" << std::setw(10) << firstname
