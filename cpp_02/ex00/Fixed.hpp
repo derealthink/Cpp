@@ -5,19 +5,19 @@
 #include <iostream>
 #include <string>
 
-class fixedPoint
+class Fixed
 {
     private:
         int n;
         static const int frac = 8;
     public:
-        fixedPoint(); //constructor
-        fixedPoint(const fixedPoint &copy); //copy constructor
-        fixedPoint& operator=(const fixedPoint &copy); //copy assignment operator
-        ~fixedPoint();
+        Fixed(); //constructor
+        Fixed(const Fixed &copy); //copy constructor
+        Fixed& operator=(const Fixed &copy); //copy assignment operator
+        ~Fixed();
 
-        int getRawbits(void) const;
-        void setRawbits(int const raw);
+        int getRawBits(void) const;
+        void setRawBits(int const raw);
 };
 
 
