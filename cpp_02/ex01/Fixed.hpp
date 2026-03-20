@@ -23,11 +23,8 @@ class Fixed
         ~Fixed();
         int getRawBits(void) const;
         void setRawBits(int const raw);
-
-
-        //friend because needs access but inst member
-        friend std::ostream& operator<<(std::ostream& os, const Fixed& obj);
 };
+std::ostream& operator<<(std::ostream& os, const Fixed& obj);
 
 
 #endif

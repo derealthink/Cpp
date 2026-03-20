@@ -1,23 +1,25 @@
 #include "Fixed.hpp"
 
-Fixed::Fixed() : n(0) {std::cout << "Deafult constructor called\n";}
+Fixed::Fixed() : n(0) {
+    //std::cout << "Deafult constructor called\n";
+}
 
 Fixed::Fixed(const int n){
-    std::cout << "Int constructor called\n";
+    //std::cout << "Int constructor called\n";
     this->n = n << 8;
 }
 
 Fixed::Fixed(const float n){
-    std::cout << "Float constrcutor called\n";
+    //std::cout << "Float constrcutor called\n";
     this->n = roundf(n * 256);
 }
 
 Fixed::Fixed(const Fixed &copy) : n(copy.n){
-    std::cout << "Copy constructor called\n";
+    //std::cout << "Copy constructor called\n";
 }
 
 Fixed &Fixed::operator=(const Fixed &copy){
-    std::cout << "Copy assignment operator called\n";
+    //std::cout << "Copy assignment operator called\n";
     if (this == &copy)
         return *this;
     this->setRawBits(copy.getRawBits());
@@ -43,7 +45,7 @@ void Fixed::setRawBits(const int raw){
 }
 
 Fixed::~Fixed(){
-    std::cout << "Destructor called\n";
+    //std::cout << "Destructor called\n";
 }
 
 
@@ -104,14 +106,60 @@ Fixed Fixed::operator-(const Fixed& other) const {
 
 Fixed Fixed::operator*(const Fixed& other) const {
     Fixed result;
-    result.n = this->n * other.n;
+    result.n = (this->n * other.n) >> frac;
     return result;
 }
 
 Fixed Fixed::operator/(const Fixed& other) const {
     Fixed result;
-    result.n = this->n / other.n;
+    result.n = (this->n >> frac) / (other.n >> frac);
     return result;
 }
 
+//___________IN/DECREMENT_OPERATORS___________
+
+Fixed &Fixed::operator++() {
+    this->n++;
+    return *this;
+}
+
+Fixed Fixed::operator++(int) {
+    Fixed temp(*this);
+    this->n++;
+    return temp;
+}
+
+Fixed &Fixed::operator--() {
+    this->n--;
+    return *this;
+}
+
+Fixed Fixed::operator--(int) {
+    Fixed temp(*this);
+    this->n--;
+    return temp;
+}
+
+//___________MIN_MAX_FUNCTIONS___________
+
+Fixed &Fixed::min(Fixed &Fixed1, Fixed &Fixed2) {
+  return (Fixed1 < Fixed2 ? Fixed1 : Fixed2);
+}
+
+const Fixed &Fixed::min(const Fixed &Fixed1, const Fixed &Fixed2) {
+  return (Fixed1 < Fixed2 ? Fixed1 : Fixed2);
+}
+
+Fixed &Fixed::max(Fixed &Fixed1, Fixed &Fixed2) {
+  return (Fixed1 > Fixed2 ? Fixed1 : Fixed2);
+}
+
+const Fixed &Fixed::max(const Fixed &Fixed1, const Fixed &Fixed2) {
+  return (Fixed1 > Fixed2 ? Fixed1 : Fixed2);
+}
+
+std::ostream& operator<<(std::ostream& os, const Fixed& obj){
+    os << obj.toFloat();
+    return os;
+};
 

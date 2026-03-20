@@ -37,14 +37,19 @@ class Fixed
         Fixed operator*(const Fixed& other) const;
         Fixed operator/(const Fixed& other) const;
 
-        Fixed operator++(int)
+        Fixed &operator++();
+        Fixed operator++(int);
+        Fixed &operator--();
+        Fixed operator--(int);
         
-
-
-
-        //friend because needs access but inst member
-        friend std::ostream& operator<<(std::ostream& os, const Fixed& obj);
+        
+        static Fixed &min(Fixed &Fixed1, Fixed &Fixed2);
+        static const Fixed &min(const Fixed &Fixed1, const Fixed &Fixed2);
+        static Fixed &max(Fixed &Fixed1, Fixed &Fixed2);
+        static const Fixed &max(const Fixed &Fixed1, const Fixed &Fixed2);
 };
+
+std::ostream& operator<<(std::ostream& os, const Fixed& obj);
 
 
 #endif
