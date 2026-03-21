@@ -1,41 +1,68 @@
 #include "ClapTrap.hpp"
+#include "ScavTrap.hpp"
 
-int main() {
-    std::cout << "\n--- Creating ClapTrap A ---\n";
-    ClapTrap a("Alpha");
+int main()
+{
+    std::cout << "\n===== CLAPTRAP BASIC TEST =====\n" << std::endl;
 
-    std::cout << "\n--- Basic actions ---\n";
-    a.attack("Target Dummy");
-    a.takeDamage(3);
-    a.beRepaired(5);
+    ClapTrap a("A");
+    ClapTrap b("B");
 
-    std::cout << "\n--- Energy depletion test ---\n";
-    for (int i = 0; i < 11; i++) {
-        a.attack("Wall");
-    }
+    a.attack("B");
+    b.takeDamage(5);
 
-    std::cout << "\n--- Repair with no energy ---\n";
-    a.beRepaired(5);
+    b.beRepaired(3);
+    b.attack("A");
 
-    std::cout << "\n--- Taking lethal damage ---\n";
-    a.takeDamage(100);
+    std::cout << "\n===== ENERGY / DEATH TEST =====\n" << std::endl;
 
-    std::cout << "\n--- Try actions when 'dead' ---\n";
-    a.attack("Ghost");
-    a.beRepaired(10);
+    // Drain energy
+    for (int i = 0; i < 12; i++)
+        a.attack("B");
 
-    std::cout << "\n--- Copy constructor test ---\n";
-    ClapTrap b(a);
+    // Kill ClapTrap
+    b.takeDamage(100);
+    b.attack("A");      // should fail
+    b.beRepaired(10);   // should fail
 
-    std::cout << "\n--- Assignment operator test ---\n";
-    ClapTrap c("Charlie");
-    c = a;
+    std::cout << "\n===== COPY + ASSIGNMENT TEST =====\n" << std::endl;
 
-    std::cout << "\n--- Independent state check ---\n";
-    c.beRepaired(10);
-    std::cout << "Original A HP: " << a.getHitP() << std::endl;
-    std::cout << "Copy C HP: " << c.getHitP() << std::endl;
+    ClapTrap c(a); // copy constructor
+    c.attack("Someone");
 
-    std::cout << "\n--- End of program ---\n";
+    ClapTrap d("D");
+    d = a; // assignment operator
+    d.attack("Someone else");
+
+    std::cout << "\n===== SCAVTRAP TEST =====\n" << std::endl;
+
+    ScavTrap s1("SCAV-1");
+    ScavTrap s2("SCAV-2");
+
+    s1.attack("SCAV-2");
+    s2.takeDamage(30);
+
+    s2.beRepaired(10);
+    s2.guardGate();
+
+    std::cout << "\n===== SCAV ENERGY / DEATH TEST =====\n" << std::endl;
+
+    for (int i = 0; i < 55; i++)
+        s1.attack("target"); // should eventually stop
+
+    s2.takeDamage(200);
+    s2.attack("SCAV-1"); // should fail
+
+    std::cout << "\n===== SCAV COPY TEST =====\n" << std::endl;
+
+    ScavTrap s3(s1);
+    s3.guardGate();
+
+    ScavTrap s4("temp");
+    s4 = s1;
+    s4.attack("copied target");
+
+    std::cout << "\n===== END OF TESTS =====\n" << std::endl;
+
     return 0;
 }
