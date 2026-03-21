@@ -1,6 +1,7 @@
 #include "Fixed.hpp"
 
-Fixed::Fixed() : n(0) {std::cout << "Deafult constructor called\n";}
+Fixed::Fixed() : n(0) {
+    std::cout << "Deafult constructor called\n";}
 
 Fixed::Fixed(const Fixed &copy) : n(copy.n){
     std::cout << "Copy constructor called\n";

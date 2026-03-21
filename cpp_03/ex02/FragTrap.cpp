@@ -40,6 +40,6 @@ void FragTrap::attack(const std::string &target){
 
 
 void FragTrap::highFivesGuys(){
-    std::cout << "FRAG " << this->getName() << " is requesting a hihgh five! don't leave FRAG " << this->getName() << " Hanging...." << std::endl;
+    std::cout << "FRAG " << this->getName() << " is requesting a high five! don't leave FRAG " << this->getName() << " Hanging...." << std::endl;
 }
 

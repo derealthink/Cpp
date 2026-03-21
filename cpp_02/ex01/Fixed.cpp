@@ -4,12 +4,13 @@ Fixed::Fixed() : n(0) {std::cout << "Deafult constructor called\n";}
 
 Fixed::Fixed(const int n){
     std::cout << "Int constructor called\n";
-    this->n = n << 8;
+    this->n = n << frac;
 }
 
 Fixed::Fixed(const float n){
     std::cout << "Float constrcutor called\n";
-    this->n = roundf(n * 256);//2^8 is 256
+    //this->n = roundf(n * 256);//2^8 is 256
+    this->n = roundf(n * scale);
 }
 
 Fixed::Fixed(const Fixed &copy) : n(copy.n){
@@ -25,11 +26,12 @@ Fixed &Fixed::operator=(const Fixed &copy){
 }
 
 float Fixed::toFloat(void) const{
-    return (n / 256.0f);
+    //return (n / 256.0f);
+    return (n / (float)scale);
 }
 
 int Fixed::toInt(void) const{
-    return (n >> 8);
+    return (n >> frac);
 }
 
 int Fixed::getRawBits(void) const {

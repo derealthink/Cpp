@@ -12,6 +12,7 @@ class Fixed
     private:
         int n;
         static const int frac = 8;
+        static const int scale = 1 << frac;
     public:
         Fixed();
         Fixed(const int n); //constructor
