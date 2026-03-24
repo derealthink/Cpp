@@ -6,12 +6,12 @@ Fixed::Fixed() : n(0) {
 
 Fixed::Fixed(const int n){
     //std::cout << "Int constructor called\n";
-    this->n = n << 8;
+    this->n = n << frac;
 }
 
 Fixed::Fixed(const float n){
     //std::cout << "Float constrcutor called\n";
-    this->n = roundf(n * 256);
+    this->n = roundf(n * scale);
 }
 
 Fixed::Fixed(const Fixed &copy) : n(copy.n){
@@ -27,11 +27,11 @@ Fixed &Fixed::operator=(const Fixed &copy){
 }
 
 float Fixed::toFloat(void) const{
-    return (n / 256.0f);
+    return (n / (float)scale);
 }
 
 int Fixed::toInt(void) const{
-    return (n >> 8);
+    return (n >> frac);
 }
 
 int Fixed::getRawBits(void) const {
@@ -111,8 +111,13 @@ Fixed Fixed::operator*(const Fixed& other) const {
 }
 
 Fixed Fixed::operator/(const Fixed& other) const {
+    if (other.n == 0) {
+        std::cerr << "Error: division by zero\n";
+        return Fixed();
+    }
+
     Fixed result;
-    result.n = (this->n >> frac) / (other.n >> frac);
+    result.n = (static_cast<long>(this->n) << frac) / other.n;
     return result;
 }
 
