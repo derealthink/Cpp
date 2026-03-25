@@ -9,9 +9,9 @@ class Dog : public Animal
         Dog();
         Dog(const Dog &copy);
         Dog& operator=(const Dog &copy);
-        ~Dog();
+        virtual ~Dog();
 
-        virtual void makeSound(void);
+        virtual void makeSound() const;
 };
 
 #endif
