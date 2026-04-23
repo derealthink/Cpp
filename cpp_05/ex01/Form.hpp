@@ -7,17 +7,18 @@
 #include <iostream>
 #include <string>
 #include <exception>
-
+class Bureaucrat;
 
 class Form
 {
     private:
-        std::string const name;
-        bool singed;
-        unsigned int const signGrade;
-        unsigned int const execGrade;
+        std::string const _name;
+        bool _signed;
+        unsigned int const _signGrade;
+        unsigned int const _execGrade;
     public:
         Form();
+        Form(const std::string &name, unsigned int signGrade, unsigned int execGrade);
         Form(const Form &copy);
         Form& operator=(const Form &copy);
         ~Form();
@@ -37,9 +38,11 @@ class Form
         {
             const char *what() const throw();
         };
+        void beSigned(Bureaucrat &signer);
 
 };
 
 std::ostream &operator<<(std::ostream &os, const Form &obj);
+
 
 #endif
