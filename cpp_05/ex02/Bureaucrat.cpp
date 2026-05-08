@@ -14,12 +14,14 @@ Bureaucrat::Bureaucrat(std::string const &name, int const &grade) : _name(name)
         throw Bureaucrat::GradeTooLowException();
     this->_grade = grade;
 }
-Bureaucrat::Bureaucrat(const Bureaucrat &other) : _name(other._name), _grade() {
+Bureaucrat::Bureaucrat(const Bureaucrat &other) : _name(other._name), _grade() 
+{
   std::cout << "BUREAUCRAT Copy Constructor called." << std::endl;
   *this = other;
 }
 
-Bureaucrat &Bureaucrat::operator=(const Bureaucrat &other) {
+Bureaucrat &Bureaucrat::operator=(const Bureaucrat &other) 
+{
   std::cout << "BUREAUCRAT Copy Assignment called." << std::endl;
   if (this == &other)
     return *this;
@@ -27,17 +29,20 @@ Bureaucrat &Bureaucrat::operator=(const Bureaucrat &other) {
   return *this;
 }
 
-Bureaucrat::~Bureaucrat() {
+Bureaucrat::~Bureaucrat() 
+{
   std::cout << "BUREAUCRAT Destructor called." << std::endl;
 }
 
-void Bureaucrat::decrementGrade() {
+void Bureaucrat::decrementGrade() 
+{
   if (this->_grade + 1 > MIN_GRADE)
     throw GradeTooLowException();
   this->_grade++;
 }
 
-void Bureaucrat::incrementGrade() {
+void Bureaucrat::incrementGrade() 
+{
   if (this->_grade - 1 < MAX_GRADE)
     throw GradeTooHighException();
   this->_grade--;
@@ -58,16 +63,28 @@ const char *Bureaucrat::GradeTooLowException::what() const throw()
 
 std::ostream &operator<<(std::ostream &os, const Bureaucrat &obj) 
 {
-  os << obj.getName() << ", bureaucrat grade " << obj.getGrade() << "."
-     << std::endl;
+  os << obj.getName() << ", bureaucrat grade " << obj.getGrade() << "."<< std::endl;
   return os;
 }
 
-void Bureaucrat::signForm(const Form *signedForm, const std::string &reason) {
+void Bureaucrat::signForm(const Form *signedForm, const std::string &reason) 
+{
   if (reason.empty())
-    std::cout << this->getName() << " signed " << signedForm->getName()
-              << std::endl;
+    std::cout << this->getName() << " signed " << signedForm->getName() << std::endl;
   else
-    std::cout << this->getName() << " couldn’t sign " << signedForm->getName()
-              << " because " << reason << std::endl;
+    std::cout << this->getName() << " couldn’t sign " << signedForm->getName() << " because " << reason << std::endl;
+}
+
+void Bureaucrat::executeForm(Form const & form) const
+{
+    try
+    {
+        form.execute(*this);
+        std::cout << this->getName() << " executed " << form.getName() << std::endl;
+    }
+    catch (std::exception &e)
+    {
+        std::cout << this->getName() << " couldn't execute " << form.getName()
+                  << " because " << e.what() << std::endl;
+    }
 }

@@ -3,30 +3,20 @@ NAME = ex00
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
-SRC_DIR = src
-OBJ_DIR = obj
-INC_DIR = includes
-
-SRCS = main.cpp \
+SRC = main.cpp \
 	Bureaucrat.cpp
-
-SRC = $(addprefix $(SRC_DIR)/, $(SRCS))
-OBJ = $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+OBJ = $(SRC:.cpp=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -I $(INC_DIR) -c $< -o $@
-
-$(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
 	rm -f $(OBJ)
-	rm -rf $(OBJ_DIR)
 
 fclean: clean
 	rm -f $(NAME)

@@ -61,7 +61,16 @@ bool Form::getSigned() const
 
 void Form::setSigned(bool sign)
 {
-  this->_signed = true;
+  this->_signed = sign;
+}
+
+void Form::execute(Bureaucrat const & executor) const
+{
+    if (!this->getSigned())
+        throw Form::FormNotSignedException();
+    if (executor.getGrade() > this->getExecGrade())
+        throw Form::GradeTooLowException();
+    this->executer();
 }
 
 const char *Form::GradeTooHighException::what() const throw() {
@@ -70,6 +79,10 @@ const char *Form::GradeTooHighException::what() const throw() {
 
 const char *Form::GradeTooLowException::what() const throw() {
   return ("FORM |Exception| Grade is too Low!");
+}
+
+const char *Form::FormNotSignedException::what() const throw() {
+    return ("FORM |Exception| Form is not signed!");
 }
 
 void Form::beSigned(Bureaucrat &signer) {

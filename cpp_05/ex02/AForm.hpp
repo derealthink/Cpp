@@ -42,7 +42,7 @@ class Form
         {
             const char *what() const throw();
         };
-        class FormIsNotSigned : public std::exception
+        class FormNotSignedException : public std::exception
         {
             const char *what() const throw();
         };
