@@ -6,21 +6,19 @@
 #include "RobotomyRequestForm.hpp"
 #include "ShrubberyCreationForm.hpp"
 
-class Intern 
+class Intern
 {
-    Intern();
-    Intern(const Intern &other);
-    Intern &operator=(const Intern &other);
-    ~Intern();
-  static Form *makeForm(const std::string &formName,
-                         const std::string &formTargetName);
-  static Form *makePresidentialPardonForm(const std::string &target);
-  static Form *makeRobotomyRequestForm(const std::string &target);
-  static Form *makeShrubberyCreationForm(const std::string &target);
-  class FormNotFound : public std::exception {
   public:
-    virtual const char *what() const throw();
-  };
+    Intern();
+    Intern(const Intern &copy);
+    Intern &operator=(const Intern &copy);
+    ~Intern();
+
+    Form *createShrubbery(const std::string &target) const;
+    Form *createRobotomy(const std::string &target) const;
+    Form *createPresidential(const std::string &target) const;
+
+    Form *makeForm(const std::string &formName, const std::string &target) const;
 };
 
 #endif

@@ -18,40 +18,35 @@ Intern &Intern::operator=(const Intern &other) {
 
 Intern::~Intern() { std::cout << "[Intern] Destructor called." << std::endl; }
 
-Form *Intern::makeForm(const std::string &formName,
-                        const std::string &formTargetName) {
-  std::string names[3] = {"PresidentialPardon", "RobotomyRequest",
-                          "ShrubberyCreation"};
-  int number = 0;
-  while (number <= 3) {
-    if (names[number] == formName)
-      break;
-    number++;
-  }
-  switch (number) {
-  case 0:
-    return (makePresidentialPardonForm(formTargetName));
-  case 1:
-    return (makeRobotomyRequestForm(formTargetName));
-  case 2:
-    return (makeShrubberyCreationForm(formTargetName));
-  default:
-    throw FormNotFound();
-  }
+Form *Intern::createShrubbery(const std::string &target) const {
+    return new ShrubberyCreationForm(target);
+}
+Form *Intern::createRobotomy(const std::string &target) const {
+    return new RobotomyRequestForm(target);
+}
+Form *Intern::createPresidential(const std::string &target) const {
+    return new PresidentialPardonForm(target);
 }
 
-Form *Intern::makePresidentialPardonForm(const std::string &target) {
-  return (new PresidentialPardonForm(target));
+Form *Intern::makeForm(const std::string &formName, const std::string &target) const
+{
+    std::string names[3] = {"ShrubberyCreation", "RobotomyRequest", "PresidentialPardon"};
+
+    Form *(Intern::*functions[3])(const std::string &) const = {
+        &Intern::createShrubbery,
+        &Intern::createRobotomy,
+        &Intern::createPresidential
+    };
+
+    for (int i = 0; i < 3; i++)
+    {
+        if (formName == names[i])
+        {
+            std::cout << "Intern creates " << formName << std::endl;
+            return (this->*functions[i])(target);
+        }
+    }
+    std::cout << "Intern error: form '" << formName << "' does not exist." << std::endl;
+    return NULL;
 }
 
-Form *Intern::makeRobotomyRequestForm(const std::string &target) {
-  return (new RobotomyRequestForm(target));
-}
-
-Form *Intern::makeShrubberyCreationForm(const std::string &target) {
-  return (new ShrubberyCreationForm(target));
-}
-
-const char *Intern::FormNotFound::what() const throw() {
-  return "Form not found.";
-}
