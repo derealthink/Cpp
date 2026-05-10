@@ -16,7 +16,7 @@ ScalarConverter &ScalarConverter::operator=(const ScalarConverter &copy)
 
 ScalarConverter::~ScalarConverter(){}
 
-bool ScalarConverter::isChar(std::string& rep)
+bool ScalarConverter::isChar(const std::string& rep)
 {
     if (rep.size() == 1 && std::isprint(rep.at(0)) 
         && !std::isdigit(rep.at(0)))
@@ -25,23 +25,23 @@ bool ScalarConverter::isChar(std::string& rep)
         return false;
 }
 
-bool ScalarConverter::isInteger(std::string& rep)
+bool ScalarConverter::isInteger(const std::string& rep)
 {
-    int len = rep.length();
+    if (rep.empty()) return false;
     int i = 0;
-    if (rep.at(i) == '-')
-        i++;
+    if (rep[i] == '-' || rep[i] == '+') i++;
     
-    while (i < len)
+    if (i == (int)rep.length()) return false;
+    
+    while (i < (int)rep.length()) 
     {
-        if (!std::isdigit(rep.at(i)))
-            return false;
+        if (!std::isdigit(rep[i])) return false;
         i++;
     }
     return true;
 }
 
-bool ScalarConverter::isFloat(std::string& rep)
+bool ScalarConverter::isFloat(const std::string& rep)
 {
     int len = rep.length();
     size_t pos = rep.find('.');
@@ -66,59 +66,55 @@ bool ScalarConverter::isFloat(std::string& rep)
     return true;
 }
 
-bool ScalarConverter::isDouble(std::string& rep)
+bool ScalarConverter::isDouble(const std::string& rep)
 {
-    size_t pos = rep.find('.');
-    int len = rep.length();
-    if (pos == std::string::npos)
-        return false;
-    int s = 0;
-    for (int i = 0; i < len; i++)
-    {
-        if (rep.at(i) == '.')
-            s++;
-        else if (!isdigit(rep.at(i)))
-            return false;
+   if (rep.empty()) return false;
+    int i = 0;
+    if (rep[i] == '-' || rep[i] == '+') i++;
+    int dots = 0;
+    bool hasDigit = false;
+    while (i < (int)rep.length()) {
+        if (rep[i] == '.') dots++;
+        else if (std::isdigit(rep[i])) hasDigit = true;
+        else return false;
+        i++;
     }
-
-    if (s != 1)
-        return false;
-
-    return true;
+    return dots == 1 && hasDigit;
 }
 
-bool ScalarConverter::isInfinite(std::string& rep)
+bool ScalarConverter::isInfinite(const std::string& rep)
 {
     return (rep == "nan" || rep == "+inf" || rep == "-inf" ||
         rep == "nanf" || rep == "+inff" || rep == "-inff");
 }
 
-void ScalarConverter::convertToNumber(const std::string &rep,long double number) 
+void ScalarConverter::convertToNumber(long double number) 
 {
-    if (number < std::numeric_limits<char>::min() ||number > std::numeric_limits<char>::max())
-        std::cout << "char: overflows" << std::endl;
-    
+    // char
+    if (number < std::numeric_limits<char>::min() || number > std::numeric_limits<char>::max())
+        std::cout << "char: impossible" << std::endl;
     else
         convertToChar(static_cast<char>(number));
 
-    
+    // int
     if (number < std::numeric_limits<int>::min() || number > std::numeric_limits<int>::max())
-        std::cout << "int: overflows" << std::endl;
-    
+        std::cout << "int: impossible" << std::endl;
     else
-        std::cout << "int: " << std::atoi(rep.c_str()) << std::endl;
-    
+        std::cout << "int: " << static_cast<int>(number) << std::endl; // ← fix
+
+    // float
     if (number < -std::numeric_limits<float>::max() || number > std::numeric_limits<float>::max())
-        std::cout << "float: overflows" << std::endl;
-    
+        std::cout << "float: impossible" << std::endl;
     else
-        std::cout << "float: " << std::strtof(rep.c_str(), NULL) << "f"<< std::endl;
-    
+        std::cout << std::fixed << std::setprecision(1)
+                  << "float: " << static_cast<float>(number) << "f" << std::endl; // ← fix
+
+    // double
     if (number < -std::numeric_limits<double>::max() || number > std::numeric_limits<double>::max())
-        std::cout << "double: overflows" << std::endl;
-    
+        std::cout << "double: impossible" << std::endl;
     else
-        std::cout << "double: " << std::strtod(rep.c_str(), NULL) << std::endl;
+        std::cout << std::fixed << std::setprecision(1)
+                  << "double: " << static_cast<double>(number) << std::endl; // ← fix
 }
 
 
@@ -162,11 +158,11 @@ void ScalarConverter::convert(const std::string &rep)
     if (isChar(rep)) 
         convertFromChar(rep);
     else if (isInteger(rep)) 
-        convertToNumber(rep, std::strtold(rep.c_str(), NULL));
+        convertToNumber(std::strtold(rep.c_str(), NULL));
     else if (isFloat(rep)) 
-        convertToNumber(rep, std::strtold(rep.c_str(), NULL));
+        convertToNumber(std::strtold(rep.c_str(), NULL));
     else if (isDouble(rep)) 
-        convertToNumber(rep, std::strtold(rep.c_str(), NULL));
+        convertToNumber(std::strtold(rep.c_str(), NULL));
     else if (isInfinite(rep)) 
         convertFromInfinite(rep);
     else
