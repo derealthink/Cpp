@@ -1,0 +1,35 @@
+r
+• Your code should still compile if you add the flag -std=c++98
+
+
+Write class names in UpperCamelCase format. Files containing class code will
+always be named according to the class name. For instance:
+ClassName.hpp/ClassName.h, ClassName.cpp, or ClassName.tpp. Then, if you
+have a header file containing the definition of a class "BrickWall" standing for a
+brick wall, its name will be BrickWall.hpp.
+
+ Memory leakage occurs in C++ too. When you allocate memory (by using the new
+keyword), you must avoid memory leaks.
+• From Module 02 to Module 09, your classes must be designed in the Orthodox
+Canonical Form, except when explicitly stated otherwise.
+• Any function implementation put in a header file (except for function templates)
+means 0 to the exercise.
+• You should be able to use each of your headers independently from others. Thus,
+they must include all the dependencies they need. However, you must avoid the
+problem of double inclusion by adding include guards. Otherwise, your grade will
+be 0.
+
+
+Directory: ex00/
+Files to Submit: Makefile, main.cpp, easyfind.{h, hpp}
+and optional file: easyfind.tpp
+Forbidden: None
+A first easy exercise is the way to start off on the right foot.
+Write a function template easyfind that accepts a type T. It takes two parameters:
+the first one is of type T, and the second one is an integer.
+Assuming T is a container of integers, this function has to find the first occurrence
+of the second parameter in the first parameter.
+If no occurrence is found, you can either throw an exception or return an error value
+of your choice. If you need some inspiration, analyze how standard containers behave.
+Of course, implement and turn in your own tests to ensure everything works as expected.
+You don’t have to handle associative containers.

@@ -10,7 +10,7 @@ int main(void) {
         Base* obj = generate();
 
         std::cout << "Pointer: "; identify(obj);
-        std::cout << "Ref:     "; identify(*obj);   // dereference = reference
+        std::cout << "Ref:     "; identify(*obj);
 
         delete obj;
     }
