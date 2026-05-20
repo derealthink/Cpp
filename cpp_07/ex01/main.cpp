@@ -2,14 +2,6 @@
 #include <iostream>
 #include <string>
 
-/*template <typename T, typename F>
-void iter(T *arrayAddress, const int arrayLength, F func) {
-    for (int i = 0; i < arrayLength; i++)
-        func(arrayAddress[i]);
-}*/
-
-// --- Reusable function templates ---
-
 template <typename T>
 void print(const T& x) {
     std::cout << x << " ";
@@ -19,18 +11,6 @@ template <typename T>
 void increment(T& x) {
     x++;
 }
-
-// --- Functors (replace lambdas in C++98) ---
-
-struct MultiplyByThree {
-    void operator()(int& x) const { x *= 3; }
-};
-
-struct PrintDoubled {
-    void operator()(const int& x) const { std::cout << x * 2 << " "; }
-};
-
-// --- Main ---
 
 int main() {
 
@@ -67,18 +47,7 @@ int main() {
     iter(strArr, 3, print<std::string>);
     std::cout << "\n";
 
-    // Test 6: functor as callback (replaces lambda)
-    std::cout << "Test 6 - functor, multiply by 3 then print:\n";
-    iter(intArr, 5, MultiplyByThree());
-    iter(intArr, 5, print<int>);
-    std::cout << "\n";
-
-    // Test 7: functor on const array
-    std::cout << "Test 7 - functor on const array, print doubled:\n";
-    iter(constArr, 3, PrintDoubled());
-    std::cout << "\n";
-
-    // Test 8: char array
+    // Test 6: char array
     std::cout << "Test 8 - char array, print:\n";
     char charArr[] = {'a', 'b', 'c', 'd'};
     iter(charArr, 4, print<char>);
