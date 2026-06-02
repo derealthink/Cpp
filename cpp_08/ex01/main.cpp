@@ -5,6 +5,9 @@
 #include <vector>
 
 static void basicTest() {
+    
+    std::cout << "Basic tests from subject" << std::endl;
+    std::cout << std::endl;
     Span sp(5);
     sp.addNumber(6);
     sp.addNumber(3);
@@ -14,15 +17,19 @@ static void basicTest() {
 
     std::cout << sp.shortestSpan() << std::endl;
     std::cout << sp.longestSpan() << std::endl;
+
+    std::cout << std::endl;
+    std::cout << std::endl;
 }
 
 static void rangeTest() {
     std::vector<int> data;
-    for (int i = 0; i < 10000; ++i) {
+    for (int i = 0; i < 1000000; ++i) {
         data.push_back(i);
     }
 
-    Span sp(10000);
+    std::cout << "Testing with addNumber() with 1000000 " << std::endl;
+    Span sp(1000000);
     sp.addNumber(data.begin(), data.end());
     std::cout << "range shortest: " << sp.shortestSpan() << std::endl;
     std::cout << "range longest: " << sp.longestSpan() << std::endl;

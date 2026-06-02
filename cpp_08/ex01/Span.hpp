@@ -9,7 +9,7 @@
 class Span {
 public:
     Span();
-    explicit Span(unsigned int maxSize); //explicit here change or understyand why
+    Span(unsigned int maxSize);
     Span(const Span &other);
     Span &operator=(const Span &other);
     ~Span();
