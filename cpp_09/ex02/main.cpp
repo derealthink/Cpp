@@ -1,44 +1,42 @@
 #include "PmergeMe.hpp"
 
+#include <cctype>
+#include <cstdlib>
+#include <iomanip>
+#include <sstream>
+#include <sys/time.h>
 
-static int validateSing(std::string s)
+static bool validate_single(const std::string& s)
 {
-    int i = 0;
-    
-    if (s[0] == '-'){
-        std::cout << "No negative numbers allowed" << std::endl;
-        return (0);
+    std::size_t i = 0;
+
+    if (s.empty())
+        return false;
+    if (s[i] == '+')
+        ++i;
+    if (i == s.size())
+        return false;
+    for (; i < s.size(); ++i)
+    {
+        if (!std::isdigit(static_cast<unsigned char>(s[i])))
+            return false;
     }
-    else if (s[0] == '+')
-        i++;
-    while (i < s.size() - 1){
-        if (!isdigit(s[i])){
-            std::cout << "Non numerical arguments are not allowed" << std::endl;
-            return (0);
-        }
-        i++;
-    }
-    long n = strtol(s.c_str(), NULL, 10);
-    if (n > INT_MAX){
-        std::cout << "Number provided exceeds integer" << std::endl;
-        return (0);
-    }
-    return (1);
+    errno = 0;
+    char* end = NULL;
+    long n = std::strtol(s.c_str(), &end, 10);
+    return errno != ERANGE && *end == '\0' && n > 0 && n <= INT_MAX;
 }
 
-
-static int validateAll(int argc, char **argv)
+static bool validate_all(int argc, char** argv)
 {
-    if (argc == 1){
-        std::cout << "Not enough arguments provided" << std::endl;
-        return (0);
-    }
+    if (argc < 2)
+        return false;
     for (int i = 1; i < argc; i++)
     {
-        if (!validateSing(argv[i]))
-            return (0);
+        if (!validate_single(argv[i]))
+            return false;
     }
-    return (1);
+    return true;
 }
 
 static std::vector<int> argv_to_vector(int argc, char** argv)
@@ -62,21 +60,58 @@ static std::deque<int> argv_to_deque(int argc, char** argv)
     return res;
 }
 
-template <typename T>
-static bool is_sorted(const T& container)
+template <typename Container>
+static void print_sequence(const std::string& label, const Container& container)
 {
-    if (container.size() < 2)
-        return true;
-    typename T::const_iterator it = container.begin();
-    typename T::const_iterator next = it;
-    ++next;
-
-    for (; next != container.end(); ++it, ++next)
-    {
-        if (*it > *next)
-            return false;
-        
-    }
-    return true;
+    std::cout << label;
+    for (typename Container::const_iterator it = container.begin(); it != container.end(); ++it)
+        std::cout << ' ' << *it;
+    std::cout << std::endl;
 }
 
+static double elapsed_us(struct timeval start, struct timeval end)
+{
+    return (end.tv_sec - start.tv_sec) * 1000000.0
+         + (end.tv_usec - start.tv_usec);
+}
+
+int main(int argc, char** argv)
+{
+    if (!validate_all(argc, argv))
+    {
+        std::cerr << "Error" << std::endl;
+        return 1;
+    }
+
+    PmergeMe sorter;
+    std::vector<int> before = argv_to_vector(argc, argv);
+
+    struct timeval start, end;
+
+    std::vector<int> vec = argv_to_vector(argc, argv);
+    gettimeofday(&start, NULL);
+    sorter.sort_vec(vec);
+    gettimeofday(&end, NULL);
+    double vec_time = elapsed_us(start, end);
+    std::cout << "Vector comparisons: " << PmergeMe::nbr_of_comps << std::endl;
+
+    PmergeMe::nbr_of_comps = 0;
+
+    std::deque<int> deq = argv_to_deque(argc, argv);
+    gettimeofday(&start, NULL);
+    sorter.sort_deque(deq);
+    gettimeofday(&end, NULL);
+    double deq_time = elapsed_us(start, end);
+    std::cout << "Deque comparisons: " << PmergeMe::nbr_of_comps << std::endl;
+
+    print_sequence("Before:", before);
+    print_sequence("After:", vec);
+    std::cout << std::fixed << std::setprecision(5);
+    std::cout << "Time to process a range of " << vec.size()
+              << " elements with std::vector : "
+              << vec_time << " us" << std::endl;
+    std::cout << "Time to process a range of " << deq.size()
+              << " elements with std::deque : "
+              << deq_time << " us" << std::endl;
+    return 0;
+}
