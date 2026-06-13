@@ -1,5 +1,20 @@
 #include "PmergeMe.hpp"
 
+inline long jacobsthal_number(long n)
+{
+    if (n == 0)
+        return 0;
+    long prev = 0;
+    long curr = 1;
+    for (long i = 1; i < n; ++i)
+    {
+        long next = curr + 2 * prev;
+        prev = curr;
+        curr = next;
+    }
+    return curr;
+}
+
 int PmergeMe::nbr_of_comps = 0;
 
 PmergeMe::PmergeMe()

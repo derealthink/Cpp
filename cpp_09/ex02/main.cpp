@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <sstream>
 #include <sys/time.h>
+#include <string.h>
 
 static bool validate_single(const std::string& s)
 {
@@ -27,6 +28,19 @@ static bool validate_single(const std::string& s)
     return errno != ERANGE && *end == '\0' && n > 0 && n <= INT_MAX;
 }
 
+static bool is_doubles(char **argv, int argc)
+{
+    for (int i = 0; i < argc; i++)
+    {
+        for (int j = i + 1; j < argc; j++)
+        {
+            if (strcmp(argv[i], argv[j]) == 0)
+                return true;
+        }
+    }
+    return false;
+}
+
 static bool validate_all(int argc, char** argv)
 {
     if (argc < 2)
@@ -36,6 +50,8 @@ static bool validate_all(int argc, char** argv)
         if (!validate_single(argv[i]))
             return false;
     }
+    if (is_doubles(argv, argc))
+        return false;
     return true;
 }
 
@@ -75,6 +91,7 @@ static double elapsed_us(struct timeval start, struct timeval end)
          + (end.tv_usec - start.tv_usec);
 }
 
+
 int main(int argc, char** argv)
 {
     if (!validate_all(argc, argv))
@@ -85,9 +102,7 @@ int main(int argc, char** argv)
 
     PmergeMe sorter;
     std::vector<int> before = argv_to_vector(argc, argv);
-
     struct timeval start, end;
-
     std::vector<int> vec = argv_to_vector(argc, argv);
     gettimeofday(&start, NULL);
     sorter.sort_vec(vec);
